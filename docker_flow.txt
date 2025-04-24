@@ -1,0 +1,17 @@
+*****-------film_app------******
+docker build -t film_app .
+docker run -dit --name myapp --network linked_net -p 3000:3000 apollo84/film_app:v1.0
+
+
+*****-------film_db-------******
+docker build -t film_db .
+docker run -dit --name mypg -e POSTGRES_PASSWORD=daemon --network linked_net apollo84/film_db:v1.0
+docker exec -it mypg /bin/bash
+
+
+****************
+docker tag film_db apollo84/film_db:v1.0
+docker push apollo84/film_db:v1.0
+
+docker tag film_app apollo84/film_app:v1.0
+docker push apollo84/film_app:v1.0

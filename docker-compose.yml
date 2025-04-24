@@ -1,0 +1,33 @@
+networks:
+  app_network:
+    driver: bridge
+    
+services:
+  film_app:
+    image: apollo84/film_app:v2.0
+    container_name: app
+    ports:
+      - "3000:3000"
+    depends_on:
+      film_db:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  film_db:
+    image: apollo84/film_db:v1.0
+    container_name: mypg
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: daemon
+      POSTGRES_DB: apollo84
+    networks:
+      - app_network
+
+
+
